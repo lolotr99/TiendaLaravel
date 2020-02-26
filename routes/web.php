@@ -13,13 +13,12 @@
 
 Route::get('/','CatalogoController@getIndex')->middleware('auth');
 Route::get('/catalogo','CatalogoController@getIndex')->middleware('auth');
-
-Route::get('/control',function (){
-    return view('admin.control');
-})->middleware('auth');
-
-Route::post('/catalogo','CatalogoController@postArticulo');
-Route::post('/catalogo/anadirCesta', 'CatalogoController@anadirCesta');
+Route::post('/catalogo','CatalogoController@postArticulo')->middleware('auth');
+Route::post('/catalogo/anadirCesta', 'CatalogoController@anadirCesta')->middleware('auth');
+Route::get('/control','AdminController@getIndex')->middleware('auth');
+Route::get('/deleteArticulo/{id}','AdminController@deleteArticulo')->middleware('auth');
+Route::get('/updateArticulo/{id}','AdminController@updateArticulo')->middleware('auth');
+Route::post('/updateArticulo','AdminController@postUpdate');
 
 Route::get('/cesta', function() {
     return view('privado.cesta');

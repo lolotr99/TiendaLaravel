@@ -15,7 +15,7 @@
                 @if (Auth::check())
                     <form action="{{url('catalogo/anadirCesta')}}" method="post">
                         {{csrf_field()}}
-                        <input type="submit" value="Comprar Artículo"/>
+                        <input type="submit" class="btn btn-secondary" value="Comprar Artículo"/>
                         <input type="hidden" value="{{$articulo->id}}" name="ocultoId">
                         <input type="hidden" value="{{$articulo->nombreArticulo}}" name="ocultoNombre">
                         <input type="hidden" value="{{$articulo->precio}}" name="ocultoPvp">
@@ -36,7 +36,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form name="formArticulo" method="post" action="" enctype="multipart/form-data">
+                    <form name="formArticulo" method="post" action="{{url('/catalogo')}}" enctype="multipart/form-data">
                         {{csrf_field()}}
                         <div class="form-group">
                             <label for="titulo" class="col-form-label">Nombre</label>
