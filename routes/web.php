@@ -11,22 +11,22 @@
 |
 */
 
-Route::get('/','CatalogoController@getIndex')->middleware('auth');
-Route::get('/catalogo','CatalogoController@getIndex')->middleware('auth');
-Route::post('/catalogo','CatalogoController@postArticulo')->middleware('auth');
-Route::post('/catalogo/anadirCesta', 'CatalogoController@anadirCesta')->middleware('auth');
-Route::get('/control','AdminController@getIndex')->middleware('auth');
-Route::get('/deleteArticulo/{id}','AdminController@deleteArticulo')->middleware('auth');
-Route::get('/updateArticulo/{id}','AdminController@updateArticulo')->middleware('auth');
-Route::post('/updateArticulo','AdminController@postUpdate');
 
-Route::get('/cesta', function() {
-    return view('privado.cesta');
-})->middleware('auth','mayoredad:18');
+Route::get('/','CatalogoController@getIndex');
+Route::get('/catalogo','CatalogoController@getIndex');
 
-Route::get('/miPerfil', function() {
-    return view('privado.miPerfil');
-})->middleware('auth');
+Route::group(['middleware' => 'auth', 'middleware' => 'verified'], function() {
+    Route::get('/cesta', function() { return view('privado.cesta');});
+    Route::post('/catalogo/anadirCesta', 'CatalogoController@anadirCesta');
+    Route::get('/catalogo/vaciarCesta','CatalogoController@vaciarCesta');
+    Route::get('/control','AdminController@getIndex');
+    Route::post('/control/anadirArticulo','AdminController@postArticulo');
+    Route::get('/deleteArticulo/{id}','AdminController@deleteArticulo');
+    Route::get('/updateArticulo/{id}','AdminController@updateArticulo');
+    Route::post('/updateArticulo','AdminController@postUpdate');
+    Route::get('/miPerfil','AdminController@miPerfil');
+});
 
-Auth::routes();
+Route::post('/cesta/comprar','CatalogoController@comprarArticulo')->middleware('auth','mayoredad:18');
+Auth::routes(['verify' => true]);
 Route::get('/home', 'HomeController@index')->name('home');

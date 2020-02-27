@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Articulo;
+use App\Historialventas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use mysql_xdevapi\Session;
 
 class CatalogoController extends Controller
 {
@@ -15,22 +16,26 @@ class CatalogoController extends Controller
         return	view('catalogo.show', array('arrayArticulos'=>$articulos));
     }
 
-    public function postArticulo(Request $request) {
-         $articulo = new Articulo();
-         $articulo->nombreArticulo = $request->input('nombre');
-         $articulo->marca = $request->input('marca');
-         $articulo->precio = $request->input('precio');
-         $articulo->imagenArticulo = $request->file('imagenArticulo')->move('imagenes',$request->file('imagenArticulo')->getClientOriginalName());
-         $articulo->descripcion = $request->input('descripcion');
-         $articulo->save();
-         return redirect('catalogo');
-    }
-
     public function anadirCesta(Request $request) {
          $id = $request->input('ocultoId');
          $articulo = Articulo::find($id);
          $arrayArticulos = array($articulo);
          session(['cesta' => $arrayArticulos]);
          return redirect('cesta');
+    }
+
+    public function vaciarCesta() {
+        session()->forget('cesta');
+        return view('privado.cesta');
+    }
+
+    public function comprarArticulo(Request $request) {
+         $historialVentas = new Historialventas();
+         $historialVentas->idUsuario = Auth::user()->id;
+         $historialVentas->idArticulo = $request->input('ocultoIdArticulo');
+         $historialVentas->fechacompra = date('Y-m-d');
+         $historialVentas->cantidad = $request->input('cantidad');
+         $historialVentas->save();
+         return view('catalogo.factura');
     }
 }

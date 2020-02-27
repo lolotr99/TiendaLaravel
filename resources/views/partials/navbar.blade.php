@@ -19,6 +19,9 @@
                     </li>
                 @endif
             @endif
+            <li class="nav-item active">
+                <a class="nav-link" href="{{url('/api/articulos')}}">API<span class="sr-only"></span></a>
+            </li>
         </ul>
 
         <ul class="navbar-nav navbar-right">
