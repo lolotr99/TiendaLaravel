@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Articulo;
 use App\Historialventas;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -32,6 +33,12 @@ class AdminController extends Controller
     }
 
     public function postArticulo(Request $request) {
+
+        $articulos = Articulo::all();
+        $error = DB::table('articulos')->where('nombreArticulo', '=', $request->input('nombre'))->get();
+        if(count($error) > 0) {
+            return view('admin.control', array('error' => 'Este articulo ya existe', 'arrayArticulos' => $articulos,'modal' => true));
+        }
         $articulo = new Articulo();
         $articulo->nombreArticulo = $request->input('nombre');
         $articulo->marca = $request->input('marca');

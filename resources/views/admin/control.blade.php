@@ -1,13 +1,11 @@
 @extends('layouts.master')
 @section('content')
-
     <div class="row mt-5">
         @include('flash::message')
     </div>
     <div class="row d-flex justify-content-end">
-        <button class="btn btn-primary" data-toggle="modal" data-target="#modalArticulo">Añadir Articulo</button>
+        <button id="modalboton" class="btn btn-primary" data-toggle="modal" data-target="#modalArticulo">Añadir Articulo</button>
     </div>
-
 <div class="row">
         @foreach($arrayArticulos as	$key =>	$articulo)
         <div class="card mr-5 mb-5" style="width:400px">
@@ -36,8 +34,13 @@
                 <form name="formArticulo" method="post" action="{{url('/control/anadirArticulo')}}" enctype="multipart/form-data">
                     {{csrf_field()}}
                     <div class="form-group">
-                        <label for="titulo" class="col-form-label">Nombre</label>
-                        <input type="text" required class="form-control" name="nombre" id="nombre">
+                        <label for="titulo" class="col-form-label">{{ __('Nombre') }}</label>
+                        <input type="text" required class="form-control @if(isset($error)) is-invalid @endif" name="nombre" id="nombre" value="{{old('nombre')}}">
+                        @if(isset($error))
+                            <span class="invalid-feedback" role="alert">
+                            <strong>{{ $error }}</strong>
+                        </span>
+                        @endif
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
@@ -51,21 +54,38 @@
                             </select>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="precio">Precio</label>
-                            <input type="number"  step=".01" name="precio" min="0" class="form-control" required id="precio" placeholder="0,00€">
+                            <label for="precio">{{ __('Precio') }}</label>
+                            <input type="number"  step=".01" name="precio" min="0" class="form-control @if(isset($error)) is-invalid @endif" required id="precio" placeholder="0,00€" value="{{old('precio')}}">
+                            @error('precio')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="imagenArticulo" class="col-form-label">Seleccionar Imagen</label>
-                        <input type="file" name="imagenArticulo" accept=".png, .jpg" id="imagenArticulo" required>
+                        <label for="imagenArticulo" class="col-form-label">{{ __('Seleccionar Imagen') }}</label>
+                        <input type="file" name="imagenArticulo" class="form-control @if(isset($error)) is-invalid @endif" accept=".png, .jpg" id="imagenArticulo" required value="{{old('imagenArticulo')}}">
+                        @error('imagenArticulo')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
                     </div>
                     <div class="form-group">
-                        <label for="descripcion" class="col-form-label">Descripcion:</label>
-                        <textarea class="form-control" name="descripcion" id="descripcion" required></textarea>
+                        <label for="descripcion" class="col-form-label">{{ __('Descripcion') }}</label>
+                        <textarea class="form-control @if(isset($error)) is-invalid @endif" name="descripcion" id="descripcion" required>{{old('descripcion')}}</textarea>
+                        @error('descripcion')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Guardar Articulo</button>
+                        <button type="submit" class="btn btn-primary">
+                            {{ __('Guardar Articulo') }}
+                        </button>
                     </div>
                 </form>
             </div>
